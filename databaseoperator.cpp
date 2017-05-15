@@ -151,6 +151,8 @@ bool DatabaseOperator::execute(QString s,int affectedTableID){
 }
 
 QSqlQueryModel*  DatabaseOperator::composeQuery(QString s){
+    if(s.toLower().toStdString().substr(0,6)!="select")
+        return new QSqlQueryModel;
     QSqlQueryModel* model = new QSqlQueryModel;
     model->setQuery(s,database);
     return model;

@@ -83,6 +83,7 @@ namespace QE{
     static QString raceGroup;
     static QString raceReligions;
     static QString legionsToRel;
+    static QString prName;
 
     static void Init(){
         legionsRel = "Знайти всі легіони,що належать до тої ж релігії,що й вибраний";
@@ -95,6 +96,8 @@ namespace QE{
         legionsToRel = "Знайти усі раси, які поклюняються лише деяким"
                        "з тих релігій,яким поклоняються легіони з номерами, "
                        "що не перевищують заданого";
+
+        prName = "Знайти імена всіх примархів, чиї легіони бились в усіх тих битвах що й заданий легіон";
     }
 }
 MainForm::MainForm(QWidget *parent) :
@@ -133,6 +136,7 @@ MainForm::MainForm(QWidget *parent) :
 
     ui->QueryTypeBox->addItem(QE::containedRel);
     ui->QueryTypeBox->addItem(QE::legionsToRel);
+    ui->QueryTypeBox->addItem(QE::prName);
 
     ui->Queries->hide();
 
@@ -158,7 +162,7 @@ void MainForm::on_QueryTypeBox_currentTextChanged(const QString &t)
         l = dbOperator.getQuery("select raceName from `Races`");
     }
 
-    if(t == QE::legionsRel){
+    if(t == QE::legionsRel || t == QE::prName){
         l = dbOperator.getQuery("select name from `Legions`");
     }
     if(t == QE::raceGroup){
@@ -241,6 +245,24 @@ void MainForm::on_dbQuery_clicked()
                 "        from Squard inner join Legions"
                 "        on Squard.sqID = Legions.sqId"
                 "        where Legions.legID <="+p+"))";
+    }
+
+    if(t == QE::prName){
+        q = "select Primarhs.prName "
+            "    from Primarhs inner join Legions as L1"
+            "        on Primarhs.legID = L1.legID"
+            "    where "
+            "        not exists( "
+            "            select LegionsBattles.btID "
+            "            from LegionsBattles inner join Legions as L2"
+            "                on L2.legID = LegionsBattles.legID"
+            "            where"
+            "                L2.name = \""+p+"\" and"
+            "                LegionsBattles.btID not in("
+            "                    select btID from LegionsBattles as LB1"
+            "                    where LB1.legID = L1.legID"
+            "                )"
+            "            )";
     }
 
     auto mod = dbOperator.composeQuery(q);
@@ -332,6 +354,18 @@ void MainForm::on_execute_clicked()
     ui->queryTable->setModel(model);
 }
 
+QString transformate(QString a){
+
+    cout<<a.toStdString()<<'\n';
+
+    if(a=="int")
+        return "Число";
+    if(a=="QString")
+        return "Текст";
+    return a;
+
+}
+
 void MainForm::on_tabWidget_currentChanged(int index)
 {
     if(index <SpecialTabsCount){
@@ -377,8 +411,9 @@ void MainForm::on_tabWidget_currentChanged(int index)
             auto la = new QLabel(ui->insertionPanel);
 
 
-            la->setText(l[i].value().typeName());
-            la->setObjectName(l[i].value().typeName());
+
+            la->setText(transformate(l[i].value().typeName()));
+            la->setObjectName((l[i].value().typeName()));
             la->show();
             la->resize(100,30);
             la->move(15+100*i,30);
@@ -395,7 +430,7 @@ void MainForm::on_insertB_clicked()
             ui->tabWidget->tabText(ui->tabWidget->currentIndex())+
             "` values (";
     for(int i=0;i<insertionFields.size();++i)
-        if(  labels[i]->objectName() == "int")
+        if(  labels[i]->objectName() == "int" || labels[i]->objectName() == "Ціле")
             q = q+ insertionFields[i]->text() + " ,";
         else
             q = q + "\""+ insertionFields[i]->text() + "\",";
@@ -468,7 +503,6 @@ void MainForm::on_deleteB_clicked()
     }
 
     int index = ui->tabWidget->currentIndex();
-  //  updateTab(ui->tabWidget->count()-1);
     updateTab(index);
 }
 
@@ -483,9 +517,7 @@ void MainForm::on_actionAbout_triggered()
 
 
 void MainForm::renewTab(){
-    //ui->actionAbout->setText(LC::help);
-    //ui->menuHelp->setTitle(LC::help);
-    //ui->menuLanguage->setTitle(LC::lang);
+
     ui->tabWidget->setTabText(0,LC::mainTab);
     ui->tabWidget->setTabText(1,LC::queryTab);
 
@@ -556,7 +588,7 @@ void MainForm::LaunchCustomPlotTest(){
     // configure bottom axis to show date instead of number:
     QSharedPointer<QCPAxisTickerText> ticker(new QCPAxisTickerText);
   //  ticker->setDateTimeFormat("d. dd MMMM\nyyyy");
-    ticker->addTick(0,"00.00");
+    ticker->addTick(0,"05.05");
     for(int i=0;i<(int)dates.size();++i)
         ticker->addTick(i+1,QString::fromStdString(dates[i].toStdString().substr(0,5)));
     customPlot->xAxis->setTicker(ticker);
@@ -578,8 +610,8 @@ void MainForm::LaunchCustomPlotTest(){
     customPlot->yAxis2->setTicks(false);
     customPlot->xAxis2->setTickLabels(false);
     customPlot->yAxis2->setTickLabels(false);
-    customPlot->xAxis->setRange(0, 10);
-    customPlot->yAxis->setRange(0, 10);
+    customPlot->xAxis->setRange(0, dates.size()+5);
+    customPlot->yAxis->setRange(0, Max);
     customPlot->legend->setVisible(true);
     customPlot->legend->setBrush(QColor(255, 255, 255, 150));
 
