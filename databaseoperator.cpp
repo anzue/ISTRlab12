@@ -2,8 +2,11 @@
 #include <QSqlQuery>
 #include <QSqlTableModel>
 #include <QTableView>
-
+#include <QSqlRecord>
+#include  <QSqlRelationalTableModel>
+#include <QSqlField>
 #include<QDate>
+#include <QSqlError>
 
 #include <cstring>
 
@@ -55,15 +58,26 @@ vector<QTableView*> DatabaseOperator::GetTables(int index){
         l = index;
         r = index+1;
     }
+/*
+    QSqlTableModel *a = new QSqlTableModel (NULL,database);
+    a->setTable(tables[1]);
+    a->select();
+
+    QTableView* x= new QTableView(NULL);
+    x->setModel(a);
+    x->setObjectName(tables[1]);
+*/
+   // x->show();
+
     for(int i=l;i<r;++i){
-        QSqlTableModel *a = new QSqlTableModel (NULL,database);
+        auto a = new QSqlRelationalTableModel (NULL,database);
         a->setTable(tables[i]);
+        a->setEditStrategy(QSqlTableModel::OnFieldChange);
         a->select();
 
-        QTableView* x= new QTableView(NULL);
+        auto x= new QTableView;
         x->setModel(a);
         x->setObjectName(tables[i]);
-        //x->set
         result.push_back(x);
     }
     return result;
@@ -88,11 +102,9 @@ string toStr(int a){
 }
 
 bool DatabaseOperator::execute(QString s,int affectedTableID){
-    QSqlQuery q(s,database);
-    cout<<s.toStdString()<<" "<<affectedTableID<<'\n';
+    QSqlQuery q(database);
+    bool b = q.exec(s);
 
-    bool b = q.exec();
-    cout<<q.executedQuery().toStdString()<<' '<<b<<'\n';
     QStringList tables = database.tables();
     if(tables[tables.size()-1] == "VersionControl")
     {
@@ -107,17 +119,12 @@ bool DatabaseOperator::execute(QString s,int affectedTableID){
     }
 
     for(int i=0;i<tables.size();++i){
-        cout<< "Updating table version "<<tables[i].toStdString()<<'\n';
         QSqlQuery tq( "select count(*) from `"+tables[i]+"`" ,database);
-
         int a;
         if(tq.exec() && tq.next())
             a = tq.value(0).toInt();
         else
             a = -1;
-
-        cout<< tq.executedQuery().toStdString()<<' ' ;
-        cout<<a<<'\n';
 
         QSqlQuery tr( "delete  from `VersionControl` where tableName = \""+
                       tables[i] + "\" and date = \""+
@@ -138,7 +145,7 @@ bool DatabaseOperator::execute(QString s,int affectedTableID){
                       QString::fromStdString(toStr(a))+") ",database);
 
             bool ff = in.exec();
-
+            Q_UNUSED(ff);
     }
     return b;
 }
@@ -167,7 +174,7 @@ vector<vector<int> > DatabaseOperator::GetStory(int tables){
 
     if(!database.isOpen())
         return vector<vector<int> > ();
-    auto a = database.exec("select tableID,date,size from `VersionControl`");
+    auto a = database.exec("select tableName,date,size from `VersionControl`");
 
 
     res.push_back(vector<int>(tables,0));
@@ -178,8 +185,14 @@ vector<vector<int> > DatabaseOperator::GetStory(int tables){
         nd = a.value(1).toDate();
         //nd = QDate::fromString(c[1]);
 
+        int ID = -1;
+        QString f = a.value(0).toString();
+        for(int i=0;i<database.tables().size();++i)
+            if(database.tables()[i] == f)
+                ID = i;
+
         if(nd == cd){
-            res[i][a.value(0).toInt()] = a.value(2).toInt();
+            res[i][ID] = a.value(2).toInt();
         }
         else {
             cd = nd;
@@ -187,7 +200,7 @@ vector<vector<int> > DatabaseOperator::GetStory(int tables){
             ++i;
             for(int j=0;j<tables;++j)
                     res[i][j] = res[i-1][j];
-            res[i][a.value("tableID").toInt()] = a.value("size").toInt();
+            res[i][ID] = a.value("size").toInt();
         }
 
 
@@ -197,3 +210,29 @@ vector<vector<int> > DatabaseOperator::GetStory(int tables){
 
     return res;
 }
+
+QStringList DatabaseOperator::getQuery(QString q){
+    QSqlQuery tq( q ,database);
+    tq.exec();
+
+    QStringList r;
+    while(tq.next()){
+        r.append( tq.value(0).toString());
+    }
+    return r;
+}
+
+QVector<QSqlField> DatabaseOperator::getColumnList(QString table){
+    QSqlRecord rec = database.record(table);
+    QVector<QSqlField> r;
+    //QSqlDriver dr = database.driver();
+
+    int c = rec.count();
+
+
+
+    for(int i=0;i<c;++i)
+        r.push_back(rec.field(i));
+
+    return r;
+};

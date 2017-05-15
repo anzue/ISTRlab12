@@ -5,6 +5,9 @@
 #include <QSqlTableModel>
 #include <string>
 #include <QSqlQueryModel>
+#include<QVector>
+#include<QSqlField>
+#include<QTableWidget>
 
 #include<QTableView>
 
@@ -36,6 +39,10 @@ public:
 
     vector<QString> GetDatesList();
     vector<vector<int> > GetStory(int tables = 0);
+
+    QStringList getQuery(QString);
+
+    QVector<QSqlField> getColumnList(QString);
 };
 
 std::string toStr(int a);

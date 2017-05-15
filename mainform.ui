@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>890</width>
-    <height>542</height>
+    <height>564</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,7 +23,7 @@
       <x>10</x>
       <y>0</y>
       <width>851</width>
-      <height>441</height>
+      <height>471</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -33,7 +33,7 @@
      </sizepolicy>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="mainTab">
      <attribute name="title">
@@ -128,19 +128,6 @@
        <string>password</string>
       </property>
      </widget>
-     <widget class="QLabel" name="infoline">
-      <property name="geometry">
-       <rect>
-        <x>50</x>
-        <y>240</y>
-        <width>271</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_4">
       <property name="geometry">
        <rect>
@@ -185,117 +172,160 @@
      <attribute name="title">
       <string>Tab 2</string>
      </attribute>
-     <widget class="QPlainTextEdit" name="query">
+     <widget class="QTabWidget" name="Queries">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>360</y>
-        <width>311</width>
-        <height>31</height>
+        <x>0</x>
+        <y>0</y>
+        <width>821</width>
+        <height>451</height>
        </rect>
       </property>
-     </widget>
-     <widget class="QPushButton" name="execute">
-      <property name="geometry">
-       <rect>
-        <x>320</x>
-        <y>360</y>
-        <width>131</width>
-        <height>31</height>
-       </rect>
+      <property name="currentIndex">
+       <number>0</number>
       </property>
-      <property name="text">
-       <string>Execute</string>
-      </property>
-     </widget>
-     <widget class="QTableView" name="queryTable">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>441</width>
-        <height>341</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QCustomPlot" name="customPlot" native="true">
-      <property name="geometry">
-       <rect>
-        <x>460</x>
-        <y>10</y>
-        <width>381</width>
-        <height>381</height>
-       </rect>
-      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Tab 1</string>
+       </attribute>
+       <widget class="QPlainTextEdit" name="query">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>380</y>
+          <width>311</width>
+          <height>31</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QTableView" name="queryTable">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>811</width>
+          <height>371</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="execute">
+        <property name="geometry">
+         <rect>
+          <x>320</x>
+          <y>380</y>
+          <width>131</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Execute</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Tab 2</string>
+       </attribute>
+       <widget class="QCustomPlot" name="customPlot" native="true">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>811</width>
+          <height>421</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_3">
+       <attribute name="title">
+        <string>Page</string>
+       </attribute>
+       <widget class="QComboBox" name="QueryTypeBox">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>791</width>
+          <height>27</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="parametr">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>40</y>
+          <width>631</width>
+          <height>27</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="dbQuery">
+        <property name="geometry">
+         <rect>
+          <x>640</x>
+          <y>40</y>
+          <width>161</width>
+          <height>27</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Виконати запит</string>
+        </property>
+       </widget>
+       <widget class="QTableView" name="dbView">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>70</y>
+          <width>791</width>
+          <height>301</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
      </widget>
     </widget>
    </widget>
-   <widget class="QPushButton" name="insertB">
+   <widget class="QWidget" name="insertionPanel" native="true">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>450</y>
-      <width>151</width>
-      <height>27</height>
+      <y>469</y>
+      <width>871</width>
+      <height>51</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Insert</string>
-    </property>
+    <widget class="QPushButton" name="insertB">
+     <property name="geometry">
+      <rect>
+       <x>630</x>
+       <y>10</y>
+       <width>111</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Insert</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="deleteB">
+     <property name="geometry">
+      <rect>
+       <x>740</x>
+       <y>10</y>
+       <width>111</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Delete</string>
+     </property>
+    </widget>
    </widget>
-   <widget class="QPushButton" name="deleteB">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>450</y>
-      <width>151</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Delete</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="valueLine">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>450</y>
-      <width>711</width>
-      <height>27</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="confirmB">
-    <property name="geometry">
-     <rect>
-      <x>730</x>
-      <y>450</y>
-      <width>131</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Confirm</string>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>890</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuHelp">
-    <property name="title">
-     <string>Help</string>
-    </property>
-    <addaction name="actionAbout"/>
-   </widget>
-   <addaction name="menuHelp"/>
+   <zorder>insertionPanel</zorder>
+   <zorder>tabWidget</zorder>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -312,6 +342,16 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+H</string>
+   </property>
+  </action>
+  <action name="actionUkrainian">
+   <property name="text">
+    <string>Ukrainian</string>
+   </property>
+  </action>
+  <action name="actionEnglish">
+   <property name="text">
+    <string>English</string>
    </property>
   </action>
  </widget>

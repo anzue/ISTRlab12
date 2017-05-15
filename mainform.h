@@ -2,7 +2,7 @@
 #define MAINFORM_H
 
 #include <QMainWindow>
-
+#include <QLabel>
 
 #include <databaseoperator.h>
 
@@ -19,6 +19,9 @@ class MainForm : public QMainWindow
     Q_OBJECT
     DatabaseOperator dbOperator;
     vector<QTableView*> tabs;
+
+    vector<QLineEdit *> insertionFields;
+    vector<QLabel*> labels;
   //  vector<QSqlTableModel*>models;
 
 public:
@@ -44,6 +47,16 @@ private slots:
     //void on_deleteB_clicked();
     
     void on_actionAbout_triggered();
+
+    void on_actionUkrainian_triggered();
+
+    void renewTab();
+
+    void on_actionEnglish_triggered();
+
+    void on_QueryTypeBox_currentTextChanged(const QString &arg1);
+
+    void on_dbQuery_clicked();
 
 private:
     Ui::MainForm *ui;
